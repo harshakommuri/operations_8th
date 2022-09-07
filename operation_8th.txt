@@ -1,0 +1,185 @@
+create database operations
+use operations
+
+create table courses (
+course_id int,
+course_name varchar(60),
+course_disc varchar(60),
+course_tag varchar(60))
+
+create table students (
+student_id int,
+student_name varchar(60),
+student_mobile_no int,
+student_course_enroll varchar(60),
+student_course_id int)
+
+
+insert into courses values(101 , 'fsda' , 'full stack data analytics' , 'Analytics'),
+(102 , 'fsds' , 'full stack data analytics' , 'Analytics'),
+(103 , 'fsds' , 'full stack data science' , 'DS'),
+(104 , 'big data' , 'full stack big data' , 'BD'),
+(105 , 'mern' , 'web dev' , 'mern'),
+(106 , 'blockchain' , 'full stack blockchain' , 'BC'),
+(101 , 'java' , 'full stack java' , 'java'),
+(102 , 'testing' , 'full testing ' , 'testing '),
+(105 , 'cybersecurity' , 'full stack cybersecurity' , 'cybersecurity'),
+(109 , 'c' , 'c language' , 'c'),
+(108 , 'c++' , 'C++ language' , 'language')
+
+insert into students values(301 , "sudhanshu", 3543453,'yes', 101),
+(302 , "sudhanshu", 3543453,'yes', 102),
+(301 , "sudhanshu", 3543453,'yes', 105),
+(302 , "sudhanshu", 3543453,'yes', 106),
+(303 , "sudhanshu", 3543453,'yes', 101),
+(304 , "sudhanshu", 3543453,'yes', 103),
+(305 , "sudhanshu", 3543453,'yes', 105),
+(306 , "sudhanshu", 3543453,'yes', 107),
+(306 , "sudhanshu", 3543453,'yes', 103)
+
+select * from courses
+select * from students
+
+-- creating inner joins
+-- INNER JOIN : Returns records that have matching values in both tables.
+select c.course_id, c.course_name, c.course_disc, s.student_id, s.student_name, s.student_course_id from courses c inner join
+students s on c.course_id = s.student_course_id
+
+-- Creating left join
+-- LEFT JOIN : Returns all records from the left table, and the matched records from the right table
+-- for understanding, check the output of query by running the query.
+select c.course_id, c.course_name, c.course_disc, s.student_id, s.student_name, s.student_course_id from courses c left join
+students s on c.course_id = s.student_course_id
+
+-- selecting data where no one bougt the courses.
+select c.course_id, c.course_name, c.course_disc, s.student_id, s.student_name, s.student_course_id from courses c left join
+students s on c.course_id = s.student_course_id where s.student_id is null
+
+-- Creating right join
+-- RIGHT JOIN : Returns all records from the right table, and the matched records from the left table.
+select c.course_id, c.course_name, c.course_disc, s.student_id, s.student_name, s.student_course_id from courses c right join
+students s on c.course_id = s.student_course_id
+
+-- Creating cross join
+--  The CROSS JOIN keyword returns all matching records from both tables whether the other table matches or not.
+select c.course_id, c.course_name, c.course_disc, s.student_id, s.student_name, s.student_course_id from courses c cross join
+students s on c.course_id = s.student_course_id
+-- cross join with the condition is same as inner join, the below query will give difference.
+select c.course_id, c.course_name, c.course_disc, s.student_id, s.student_name, s.student_course_id from courses c cross join
+students s
+
+-- Indixing in mysql.
+-- indexing will help us in decreasing time for selecting same as partitions.
+-- indexing will help us in decreasing time by creating binary tree with the selected column. for explination watch the leature of 21st Aug
+-- Other then search operation, inserting and deleting operations will be very heavy operations in indexing 
+create table if not exists course1 (
+course_id int ,
+course_name varchar(50),
+course_desc varchar(60),
+course_tag varchar(50),
+index(course_id)
+)
+
+insert into course1 values(101 , 'fsda' , 'full stack data analytics' , 'Analytics'),
+(102 , 'fsds' , 'full stack data analytics' , 'Analytics'),
+(103 , 'fsds' , 'full stack data science' , 'DS'),
+(104 , 'big data' , 'full stack big data' , 'BD'),
+(105 , 'mern' , 'web dev' , 'mern'),
+(106 , 'blockchain' , 'full stack blockchain' , 'BC'),
+(101 , 'java' , 'full stack java' , 'java'),
+(102 , 'testing' , 'full testing ' , 'testing '),
+(105 , 'cybersecurity' , 'full stack cybersecurity' , 'cybersecurity'),
+(109 , 'c' , 'c language' , 'c'),
+(108 , 'c++' , 'C++ language' , 'language')
+
+show index from course1
+
+create table if not exists course2 (
+course_id int ,
+course_name varchar(50),
+course_desc varchar(60),
+course_tag varchar(50),
+index(course_id,course_name)
+)
+
+insert into course2 values(101 , 'fsda' , 'full stack data analytics' , 'Analytics'),
+(102 , 'fsds' , 'full stack data analytics' , 'Analytics'),
+(103 , 'fsds' , 'full stack data science' , 'DS'),
+(104 , 'big data' , 'full stack big data' , 'BD'),
+(105 , 'mern' , 'web dev' , 'mern'),
+(106 , 'blockchain' , 'full stack blockchain' , 'BC'),
+(101 , 'java' , 'full stack java' , 'java'),
+(102 , 'testing' , 'full testing ' , 'testing '),
+(105 , 'cybersecurity' , 'full stack cybersecurity' , 'cybersecurity'),
+(109 , 'c' , 'c language' , 'c'),
+(108 , 'c++' , 'C++ language' , 'language')
+
+show index from course2
+
+-- Unique indexing: it's also same as indexing but will take only distanct values from selected columns for binary tree model.
+create table if not exists course3 (
+course_id int ,
+course_name varchar(50),
+course_desc varchar(60),
+course_tag varchar(50),
+unique index(course_id,course_name)
+)
+
+show index from course3
+
+-- Union operations: in union, the tables will be combined vartically. But in join tables combine horizentally.
+-- Let's try with above tables.
+select * from courses
+select * from students
+-- Here we combining two columns from courses and 2 from students table vartically using UNION. check the output
+select course_id, course_name from courses
+union
+select student_id, student_name from students
+
+-- The below query will give error. because for union operation the no.of columns from both the tables should be same.
+select course_id, course_name, course_disc from courses
+union
+select student_id, student_name from students
+
+-- This query will work even we are giving different data types in both tables. check the output for understanding.
+select course_disc, course_name from courses
+union
+select student_id, student_name from students
+
+-- UNION ALL: when we use union, in output we will get only distanct values. To overcome this problem we use UNION ALL.
+select course_id, course_name from courses
+union all
+select student_id, student_name from students
+
+-- COMMON TABLE EXPRESSION (CTE):
+-- We can use CTE in place of subqueries. Here we make output of one table into another sample table to perform more queries from that output data. In Simple words performing subqueries.
+select * from courses where course_id in (101, 102, 106)
+-- now if we want to select data from above query output where course_tag if Analytics, here we can use CTE
+with sample_courses as (
+select * from courses where course_id in (101, 102, 106))
+select * from sample_courses where course_tag = 'Analytics'
+-- The above query is example for CTE. CTE always starts with WITH clause.
+
+-- CTE is a very huge topic.
+-- Recursive CTE
+with recursive cte(n) as(
+select 1 union all select n+1 from cte where n<5)
+select * from cte;
+-- if we want to call any query again and again, then we can use recursive operation.
+
+-- Another example for recursive CTE
+with recursive cte as(
+select 1 as n, 1 as p, -1 as q 
+union all
+select n+1, q+2, p+4 from cte where n<5)
+select * from cte
+
+
+
+
+
+
+
+
+
+
